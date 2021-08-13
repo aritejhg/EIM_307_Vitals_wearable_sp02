@@ -67,7 +67,9 @@ void setup(){
   Serial.println("");
   Serial.println("WiFi connected..!");
   Serial.print("Got IP: ");  Serial.println(WiFi.localIP());
-  
+
+  server.on("/", handle_OnConnect);
+  server.onNotFound(handle_NotFound);
 
   server.begin();
   Serial.println("HTTP server started");

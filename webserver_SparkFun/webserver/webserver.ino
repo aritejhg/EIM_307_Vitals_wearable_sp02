@@ -17,7 +17,9 @@
 #include <Wire.h>
 #include <SparkFun_Bio_Sensor_Hub_Library.h>
 
+#define REPORTING_PERIOD_MS     1000
 
+float BPM, SpO2;
 
 /*#include <SPI.h>
 #define BME_SCK 18
@@ -37,13 +39,13 @@ bioData body;
 
 
 // Replace with your network credentials
-const char* ssid = "RiceCooker(2.4G)";
-const char* password = "HotSteamingRice30";
+const char* ssid = "NUS_STU";
+const char* password = "Hotsauce0621";
 
 // Create AsyncWebServer object on port 80
 AsyncWebServer server(80);
 
-float SpO2, BPM
+
 
 void setup(){
 
