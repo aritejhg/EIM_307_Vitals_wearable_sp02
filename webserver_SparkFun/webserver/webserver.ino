@@ -43,6 +43,8 @@ const char* password = "HotSteamingRice30";
 // Create AsyncWebServer object on port 80
 AsyncWebServer server(80);
 
+float SpO2, BPM
+
 void setup(){
 
   Serial.begin(115200);
@@ -75,14 +77,7 @@ void setup(){
   // Serial port for debugging purposes
   Serial.begin(115200);
   
-  bool status; 
-  // default settings
-  // (you can also pass in a Wire library object like &Wire2)
-  status = bioHub.begin(0x76);  
-  if (!status) {
-    Serial.println("Could not find a valid sensor, check wiring!");
-    while (1);
-  }
+  
 
   // Initialize SPIFFS
   if(!SPIFFS.begin()){
@@ -101,15 +96,7 @@ void setup(){
   Serial.println(WiFi.localIP());
 
   // Route for root / web page
-  server.on("/", HTTP_GET, [](AsyncWebServerRequest *request){
-    request->send(SPIFFS, "/index.html");
-  });
-  server.on("/SpO2", HTTP_GET, [](AsyncWebServerRequest *request){
-    request->send_P(200, "text/plain", readSpO2().c_str());
-  });
-  server.on("/heartrate", HTTP_GET, [](AsyncWebServerRequest *request){
-    request->send_P(200, "text/plain", readHeartrate().c_str());
-  });
+  
 
 
   // Start server
@@ -117,5 +104,30 @@ void setup(){
 }
  
 void loop(){
-  
+    body = bioHub.readBpm();
+    SpO2= body.oxygen
+    BPM= body.heartRate
+    server.on("/", HTTP_GET, [](AsyncWebServerRequest *request){
+    request->send(SPIFFS, "/index.html");
+    });
+    server.on("/SpO2", HTTP_GET, [](AsyncWebServerRequest *request){
+    request->send_P(200, "text/plain", body.oxygen().c_str());
+    });
+    server.on("/heartrate", HTTP_GET, [](AsyncWebServerRequest *request){
+    request->send_P(200, "text/plain", body.heartRate().c_str());
+    });
+    Serial.print("Heartrate: ");
+    Serial.println(body.heartRate); 
+    Serial.print("Confidence: ");
+    Serial.println(body.confidence); 
+    Serial.print("Oxygen: ");
+    Serial.println(body.oxygen); 
+    Serial.print("Status: ");
+    Serial.println(body.status); 
+    Serial.print("sensor working");
+    // Slow it down or your heart rate will go up trying to keep up
+    // with the flow of numbers
+    
+    delay(500);
+}
 }
