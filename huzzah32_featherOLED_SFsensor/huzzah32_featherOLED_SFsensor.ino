@@ -90,7 +90,7 @@ void setup(){
 
 
 //Display setup
-  //Serial.begin(9600); BUAD RATE
+  //Serial.begin(9600); BUAD RATE initialised earlier as 115200
 
   Serial.println("OLED FeatherWing test");
   // SSD1306_SWITCHCAPVCC = generate display voltage from 3.3V internally
@@ -119,17 +119,14 @@ void setup(){
   display.setTextColor(SSD1306_WHITE);
   display.setCursor(0,0);
   display.print("Connecting to SSID\n'adafruit':");
-  display.print("connected!");
   display.println("IP: 10.0.1.23");
   display.println("Sending val #0");
   display.setCursor(0,0);
   display.display(); // actually display all of the above
-  display.clearDisplay();
+  display.clearDisplay(); 
 }
 
-
 void loop(){
-
     // Information from the readBpm function will be saved to our "body"
     // variable.  
     body = bioHub.readBpm();
@@ -141,10 +138,11 @@ void loop(){
     display.println(body.oxygen); 
     display.print("Status: ");
     display.println(body.status); 
-    Serial.print("sensor working");
+    Serial.print("sensor working\n");
     // Slow it down or your heart rate will go up trying to keep up
     // with the flow of numbers
     yield();
     display.display();
-    delay(500);
+    delay(250);
+    display.clearDisplay();
 }
