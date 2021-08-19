@@ -124,22 +124,36 @@ void setup(){
   display.setCursor(0,0);
   display.display(); // actually display all of the above
   display.clearDisplay(); 
+  display.setCursor(0,0);
+  display.print(" HR ");
+  display.setCursor(30,0);
+  display.print("Conf");
+  display.setCursor(60,0);
+  display.print(" O2 ");
+  display.setCursor(90,0);
+  display.print("Stat");
 }
 
 
 void displayData()
 {
-  display.clearDisplay();
-  display.setCursor(0,0); //NECESSARY, as clear display erases setcursor
+  display.setTextColor(WHITE, BLACK);
+  display.setCursor(0,16);
+  display.print(" ");
+  display.print(body.heartRate);
+  display.print(" ");
+  display.setCursor(30,16);
+  display.print(" ");
+  display.print(body.confidence);
+  display.print(" ");
+  display.setCursor(60,16);
+  display.print(" ");
+  display.print(body.oxygen);
+  display.print(" ");
+  display.setCursor(90,16);
+  display.print(" ");
+  display.print(body.status);
   display.display();
-  display.print("Heartrate: ");
-  display.println(body.heartRate); 
-  display.print("Confidence: ");
-  display.println(body.confidence); 
-  display.print("Oxygen: ");
-  display.println(body.oxygen); 
-  display.print("Status: ");
-  display.println(body.status); 
   Serial.print("Heartrate: ");
   Serial.println(body.heartRate); 
   Serial.print("Confidence: ");
@@ -147,17 +161,16 @@ void displayData()
   Serial.print("Oxygen: ");
   Serial.println(body.oxygen); 
   Serial.print("Status: ");
-  Serial.println(body.status); 
-  // Slow it down or your heart rate will go up trying to keep up
-  // with the flow of number
-  display.display();
-
+  Serial.println(body.status);
 }
+
+
 void loop(){
   // Information from the readBpm function will be saved to our "body"
   // variable.
   body = bioHub.readBpm();
   displayData();
-  Serial.print("loop1");
+  // Slow it down or your heart rate will go up trying to keep up
+  // with the flow of number
   delay(250);
 }
