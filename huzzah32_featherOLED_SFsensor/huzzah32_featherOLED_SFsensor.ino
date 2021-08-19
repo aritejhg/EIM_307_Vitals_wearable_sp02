@@ -36,8 +36,8 @@ Adafruit_SSD1306 display = Adafruit_SSD1306(128, 32, &Wire);
 
 //sensor setup
 // Reset pin, MFIO pin, changed according to current layout
-int resPin = 32;
-int mfioPin = 33;
+int resPin = 33;
+int mfioPin = 32;
 
 // Takes address, reset pin, and MFIO pin.
 SparkFun_Bio_Sensor_Hub bioHub(resPin, mfioPin); 
@@ -126,23 +126,38 @@ void setup(){
   display.clearDisplay(); 
 }
 
+
+void displayData()
+{
+  display.clearDisplay();
+  display.setCursor(0,0); //NECESSARY, as clear display erases setcursor
+  display.display();
+  display.print("Heartrate: ");
+  display.println(body.heartRate); 
+  display.print("Confidence: ");
+  display.println(body.confidence); 
+  display.print("Oxygen: ");
+  display.println(body.oxygen); 
+  display.print("Status: ");
+  display.println(body.status); 
+  Serial.print("Heartrate: ");
+  Serial.println(body.heartRate); 
+  Serial.print("Confidence: ");
+  Serial.println(body.confidence); 
+  Serial.print("Oxygen: ");
+  Serial.println(body.oxygen); 
+  Serial.print("Status: ");
+  Serial.println(body.status); 
+  // Slow it down or your heart rate will go up trying to keep up
+  // with the flow of number
+  display.display();
+
+}
 void loop(){
-    // Information from the readBpm function will be saved to our "body"
-    // variable.  
-    body = bioHub.readBpm();
-    display.print("Heartrate: ");
-    display.println(body.heartRate); 
-    display.print("Confidence: ");
-    display.println(body.confidence); 
-    display.print("Oxygen: ");
-    display.println(body.oxygen); 
-    display.print("Status: ");
-    display.println(body.status); 
-    Serial.print("sensor working\n");
-    // Slow it down or your heart rate will go up trying to keep up
-    // with the flow of numbers
-    yield();
-    display.display();
-    delay(250);
-    display.clearDisplay();
+  // Information from the readBpm function will be saved to our "body"
+  // variable.
+  body = bioHub.readBpm();
+  displayData();
+  Serial.print("loop1");
+  delay(250);
 }
