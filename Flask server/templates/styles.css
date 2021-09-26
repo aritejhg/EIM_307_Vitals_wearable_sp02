@@ -1,0 +1,96 @@
+body
+  {font-family: "Lato", sans-serif;
+  background-color:#F4F9F9;
+}
+.sidebar {
+  height: 100%;
+  width: 2.5%;
+  position: fixed;
+  z-index: 1;
+  top:0;
+  left: 0;
+  text-align: center;
+  line-height:3;
+  background-color: #bbf2f5;
+  overflow-x: hidden;
+  padding-top: 0px;
+
+}
+
+.sidebar a {
+  padding: 6px 8px 6px 16px;
+  text-decoration: none;
+  font-size: 20px;
+  color: #818181;
+  display: block;
+}
+
+.sidebar a:hover {
+  color: #f1f1f1;
+}
+
+.main {
+  margin-left: 160px; /* Same as the width of the sidenav */
+  padding: 0px 10px;
+}
+
+@media screen and (max-height: 450px) {
+  .sidebar {padding-top: 15px;}
+  .sidebar a {font-size: 18px;}
+}
+  .Hospital{
+    height:40px;
+    padding:0;
+    background-color:#A4EBF3;
+  }
+  table, th, td {
+
+    border: 1px solid black;
+    
+    border-collapse: collapse;
+    
+    }
+    th, td {
+
+      padding: 10px;
+      
+      }
+      .navbar {
+        width:100%;
+        position:relative; 
+        left:50px;
+        margin-top:0;
+        position:relative;
+        background-color:darkcyan;
+        overflow: auto;
+      }
+      
+      .navbar a {
+        float: left;
+        padding: 12px;
+        color: white;
+        text-decoration: none;
+        font-size: 17px;
+      }
+      
+      .navbar a:hover {
+        background-color: #000;
+      }
+      
+      .active {
+        background-color: #04AA6D;
+      }
+      
+      @media screen and (max-width: 500px) {
+        .navbar a {
+          float: none;
+          display: block;
+        }
+      }
+      
+      
+  
+  
+  
+  
+  
