@@ -3,6 +3,7 @@ from flask import request, escape
 from flask_mqtt import Mqtt
 import pandas as pd
 from flask_socketio import SocketIO
+import json
 
 app = Flask(__name__)
 
@@ -16,18 +17,33 @@ app.config['MQTT_TLS_ENABLED'] = False  # set TLS to disabled for testing purpos
 mqtt = Mqtt(app)
 socketio = SocketIO(app)
 
-#patients dict, contains a list of active patients and sensors attached to them. always loaded. format is {sensorid:patientid}
-patients_dict = {} #enter demo data based on names on website
+#active patients dict, contains a list of active patients and sensors attached to them.
+#always loaded
+#format is {sensorid:patientid}
+sensors_patients_dict = {} #enter demo data based on names on website
 
 #each patient has a file, which contains details in registeration + status (active/not). also has historical data of sensors. loaded when clicked on patient
 #create files for demo
 
-# 1 active file for each patients sensor inputs? backed up to patient file every half/full day (not implementing this). always loaded.
+# 1 active file + df for each patients sensor inputs? backed up to patient file every half/full day (not implementing this). always loaded.
+for patient in set(list(patients_dict.values())):
+    if isinstance(patient, pd.DataFrame):
+        return
+    else:
+        list_of_sensors = [sensor for patient_id,sensor in sensors_patients_dict.iteritems() if patient_id == patient]
+        patient = pd.DataFrame(columns = list_of_sensors)
+        #write to file
+        return patient
+
+def add_data_to_dataframe(payload,sensor,patient_id):
+    sensor_list = list(patient_df.columns)
+    index_of_sensor = sensor_list.index(sensor)
+
 
 #handle mqtt stuff first
 @mqtt.on_connect()
 def subscribe_to_topic(topics):
-    topics = ["alert/#", "data/#"]
+    topics = ["/swa/Heartrate",'/swa/SpO2']
     for topic in topics:
         mqtt.subscribe(topic)
 
@@ -37,21 +53,23 @@ def handle_alert(client, userdata, message):
     payload=message.payload.decode()
     sensor = topic.lstrip("alert/")
     patient = patient_dict[sensor] #refer to dict, get patient id
-    patient.status = payload
+    patient.status = payload #still needs to change to incorporate pandas dataframe
+    socketio.emit('alert', {'patientid' : patient, 'status': payload} )
 
 @mqtt.on_topic('data/#')
 def handle_mqtt_message(client, userdata, message):
     topic=str(message.topic)
-    payload=message.payload.decode()
+    payload=message.payload.decode() #payload will be in the form of [time,data]
     sensor = topic.lstrip("data/")
     patient = patient_dict[sensor] #refer to dict, get patient id
-    patient.df #add data to patients dataframe
+    add_data_to_dataframe(payload,sensor,patient)
+    socektio.emit('patient_data', {'patientid' : patient, 'sensor' : sensor , 'data' : data})
 
 @mqtt.on_log()
 def handle_logging(client, userdata, level, buf):
     print(level, buf)
 
-#next, we handle wesite stuff
+#next, we handle website stuff
 @app.route('/login')
     return render_template('login.html')
 
@@ -78,8 +96,6 @@ def user_registeration():
 @app.route('/patients')
 def patients_page():
     return render_template('patients.html')
-
-
 
 
 

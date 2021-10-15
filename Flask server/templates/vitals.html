@@ -1,4 +1,5 @@
 <!DOCTYPE html>
+
 <html lang="en" dir="ltr">
   <head>
     <meta charset="utf-8">
@@ -9,6 +10,7 @@
     <link href="https://fonts.googleapis.com/css2?family=PT+Serif&display=swap" rel="stylesheet">
     </head>
   <body>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.0.1/socket.io.js"></script>
     <div class="navbar">
         <a class="active"href="#">Vitals</a> 
         <a href="#"> Prescription</a> 
@@ -19,13 +21,13 @@
     <div class="sidebar">
         <div style="color:white; background-color:turquoise;height:70px;font-family:Verdana, Geneva, Tahoma, sans-serif ;font-weight:bolder;font-size:xx-large;">H</div>
         
-        <a href="index.html" style="position:relative;right:10px;"><i class="fa fa-home" aria-hidden="true"></i></a>
+        <a href="patients.html" style="position:relative;right:10px;"><i class="fa fa-home" aria-hidden="true"></i></a>
         <i class="fa fa-fw fa-calendar-check"></i>
         
-        <a href="User Registration.html"style="position:relative;right:10px;"><i class="fas fa-user-plus"></i></a>
+        <a href="user_registeration.html" style="position:relative;right:10px;"><i class="fas fa-user-plus"></i></a>
         <i class="fas fa-search"></i>
         <br>
-        <i class="fas fa-sign-out-alt"></i>
+        <a href="login.html"style="position:relative;right:10px;"><i class="fas fa-sign-out-alt"></i></a>
     </div>
     
     <div class="main">
@@ -41,61 +43,61 @@
         <p style="position:relative;bottom:35px;display:inline-block;">
         #10023456  
         </p>
-        <p style="position:relative;bottom:55px;left:50px;display:inline-block;color:gray;">
+        <p style="position:relative;bottom:52px;left:50px;display:inline-block;color:gray;">
             Blood Type  
         </p>
-        <p style="position:relative;bottom:85px;left:135px;display:inline-block;">
+        <p style="position:relative;bottom:37px;right:15px;display:inline-block;">
             O Positive 
         </p>
-        <p style="position:relative;right:75px;bottom:60px;display:inline-block;color:gray;">
+        <p style="position:relative;bottom:60px;display:inline-block;color:gray;">
             Height  
         </p>
-        <p style="position:relative;right:125px;bottom:40px;display:inline-block;">
+        <p style="position:relative;bottom:45px;right:40px;display:inline-block;">
             178cm 
             </p>
-        <p style="position:relative;bottom:110px;left:150px;display:inline-block;color:gray;">
+        <p style="position:relative;bottom:60px;left:50px;display:inline-block;color:gray;">
                 Weight  
             </p>
-        <p style="position:relative;bottom:90px;left:100px;display:inline-block;">
+        <p style="position:relative;bottom:45px;left:10px;display:inline-block;">
                 80kg 
             </p>
-        <div style="height:270px;width:200px;background-color:white;padding:20px;position:relative;right:5px;bottom:90px;">
+        <div style="height:270px;width:200px;background-color:white;padding:20px;position:relative;right:5px;bottom:25px;">
         <p style="position:relative;bottom:20px;display:inline-block;color:gray;">
                 Ward/Bed  
             </p>  
             <br>
-        <p style="position:relative;bottom:50px;display:inline-block;">
+        <p style="position:relative;bottom:47px;display:inline-block;">
             2/7 
             </p> 
         <br>
-    <p style="position:relative;bottom:70px;display:inline-block;color:gray;">
+        <p style="position:relative;bottom:70px;display:inline-block;color:gray;">
             Primary Doctor  
         </p> 
         </div>
     <br>
-    <p style="position:relative;left:15px;bottom:350px;display:inline-block;">
+    <p style="position:relative;left:15px;bottom:300px;display:inline-block;">
         Dr John Tan
         </p> 
     <br>
-    <p style="position:relative;left:15px;bottom:370px;display:inline-block;color:gray;">
+    <p style="position:relative;left:15px;bottom:330px;display:inline-block;color:gray;">
         Secondary Doctor  
     </p> 
     </div>
 <br>
-    <p style="position:relative;right:100px;top:120px;display:inline-block;">
+    <p style="position:relative;right:100px;top:90px;display:inline-block;">
     Dr Angela Teo
     </p> 
     </div>
 <h1 style="display:inline-block;color:turquoise;position:relative;left:300px;bottom:480px;font-family: 'PT Serif', serif;">Current Readings</h1>
-<div style="position:relative;left:300px;bottom:500px; width:280px;height:120px;background-color:#F0F0F0">
+<div style="position:relative;left:300px;bottom:490px; width:280px;height:120px;background-color:#F0F0F0">
     <img style="height:100px;float:left;margin-right:20px;position:relative;top:12px;left:10px;" src="images/cardiogram.png" alt="Heart Rate">
-    <h3 style="display:inline-block;position:relative;left:20px;line-height:35px;bottom:10px;">Heart Rate:</h3>
+    <h3 style="display:inline-block;position:relative;left:20px;line-height:35px;top:20px;">Heart Rate:</h3>
 </div>
-<div style="position:relative;left:600px;bottom:620px; width:280px;height:120px;background-color:#F0F0F0">
+<div style="position:relative;left:600px;bottom:610px; width:280px;height:120px;background-color:#F0F0F0">
     <img style="height:100px;float:left;margin-right:20px;position:relative;top:12px;left:10px;" src="images/pulse-oximeter.png" alt="Spo2">
     <h3 style="display:inline-block;position:relative;left:20px;line-height:35px;bottom:10px;">Sp02:</h3>
 </div>
-<div style="position:relative;left:900px;bottom:742px; width:280px;height:120px;background-color:#F0F0F0">
+<div style="position:relative;left:900px;bottom:730px; width:280px;height:120px;background-color:#F0F0F0">
     <img style="height:100px;float:left;margin-right:20px;position:relative;top:12px;left:10px;" src="images/blood-pressure.png" alt="Blood Pressure">
     <h3 style="display:inline-block;position:relative;left:5px;line-height:35px;bottom:10px;">Blood Pressure:</h3>
 </div>
