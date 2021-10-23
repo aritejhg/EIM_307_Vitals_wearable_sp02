@@ -43,11 +43,10 @@ def add_data_to_dataframe(payload,sensor,patient_id):
 #handle mqtt stuff first
 @mqtt.on_connect()
 def subscribe_to_topic(topics):
-    topics = ["/swa/Heartrate",'/swa/SpO2']
     for topic in topics:
-        mqtt.subscribe(topic)
+        mqtt.subscribe("wearatals/#")
 
-@mqtt.on_topic('alert/#')
+@mqtt.on_topic('wearatals/alert/#')
 def handle_alert(client, userdata, message):
     topic=str(message.topic)
     payload=message.payload.decode()

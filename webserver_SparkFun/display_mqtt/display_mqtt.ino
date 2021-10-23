@@ -6,7 +6,7 @@
 
 #include <SPI.h>
 #include <Adafruit_GFX.h>
-#include <Adafruit_SSD1306.h>
+#include <Adafruit_SH110X.h>
 
 
 const char *ssid = "aritejh";
@@ -34,17 +34,17 @@ void setupMQTT() {
 }
 
 //Display setup
-Adafruit_SSD1306 display = Adafruit_SSD1306(128, 32, &Wire);
-#define BUTTON_A 1
-#define BUTTON_B 21
-#define BUTTON_C 14
+Adafruit_SH1107 display = Adafruit_SH1107(64,128, &Wire);
+//#define BUTTON_A 1
+//#define BUTTON_B 21
+//#define BUTTON_C 14
 
 
 uint32_t last_time = 0;
 
 // Reset pin, MFIO pin
-int resPin = 32;
-int mfioPin = 33;
+int resPin = 12;
+int mfioPin = 13;
 
 SparkFun_Bio_Sensor_Hub bioHub(resPin, mfioPin); 
 
@@ -91,7 +91,7 @@ void setup() {
 
   Serial.println("OLED FeatherWing test");
   // SSD1306_SWITCHCAPVCC = generate display voltage from 3.3V internally
-  display.begin(SSD1306_SWITCHCAPVCC, 0x3C); // Address 0x3C for 128x32
+  display.begin(0x3C, true); // Address 0x3C for 128x64
 
   Serial.println("OLED begun");
 
@@ -113,7 +113,7 @@ void setup() {
 
   // text display tests
   display.setTextSize(1);
-  display.setTextColor(SSD1306_WHITE);
+  display.setTextColor(SH110X_WHITE);
   display.setCursor(0,0);
   display.print("Connecting to SSID\n'adafruit':");
   display.println("IP: 10.0.1.23");
@@ -121,13 +121,13 @@ void setup() {
   display.setCursor(0,0);
   display.display(); // actually display all of the above
   display.clearDisplay(); 
-  display.setCursor(0,0);
+  display.setCursor(2,40);
   display.print(" HR ");
-  display.setCursor(30,0);
+  display.setCursor(30,40);
   display.print("Conf");
-  display.setCursor(60,0);
+  display.setCursor(2,100);
   display.print(" O2 ");
-  display.setCursor(90,0);
+  display.setCursor(30,100);
   display.print("Stat");
 
 }
@@ -153,20 +153,20 @@ void reconnect() {
 
 void displayData()
 {
-  display.setTextColor(WHITE, BLACK);
-  display.setCursor(0,16);
+  display.setTextColor(SH110X_WHITE, SH110X_BLACK);
+  display.setCursor(2,60);
   display.print(" ");
   display.print(body.heartRate);
   display.print(" ");
-  display.setCursor(30,16);
+  display.setCursor(30,60);
   display.print(" ");
   display.print(body.confidence);
   display.print(" ");
-  display.setCursor(60,16);
+  display.setCursor(2,120);
   display.print(" ");
   display.print(body.oxygen);
   display.print(" ");
-  display.setCursor(90,16);
+  display.setCursor(30,120);
   display.print(" ");
   display.print(body.status);
   display.display();

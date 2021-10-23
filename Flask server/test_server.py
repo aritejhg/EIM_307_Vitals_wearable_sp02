@@ -14,7 +14,7 @@ app.config['MQTT_TLS_ENABLED'] = False
 
 mqtt = Mqtt(app)
 
-topics = ['/swa/Heartrate', '/swa/SpO2']
+topics = ['wearatals/#']
 @mqtt.on_connect()
 def handle_connect(client, userdata, flags, rc):
     for topic in topics:
