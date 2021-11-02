@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <title>Wearatals</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="styles.css">
+    <link rel="icon" href="images/favicon.ico">
+    <link href="https://use.fontawesome.com/releases/v5.0.6/css/all.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=PT+Serif&display=swap" rel="stylesheet">
+  </head>
+  <body>
+    <div class="sidebar">
+    <div style="color:white; background-color:turquoise;height:70px;font-family:Verdana, Geneva, Tahoma, sans-serif ;font-weight:bolder;font-size:xx-large;">H</div>
+    
+    <a href="index.html" style="position:relative;right:10px;"><i class="fa fa-home" aria-hidden="true"></i></a>
+    
+    <a href="User Registration.html"style="position:relative;right:10px;"><i class="fas fa-user-plus"></i></a>
+    <a href="User Registration.html"style="position:relative;right:10px;"><i class="fas fa-search"></i></a>
+    <a href="login.html"style="position:relative;right:10px;"><i class="fas fa-sign-out-alt"></i></a>
+</div>
+<div class="main">
+ 
+<h1 style="display:inline-block;color:turquoise;position:relative;right:120px;top:20px;font-family: 'PT Serif', serif;">Welcome</h1>
+
+<p style="position:relative;left:1400px;bottom:40px;">Today, <span id="datetime"></span></p>
+
+<script>
+var dt = new Date();
+document.getElementById("datetime").innerHTML = dt.toLocaleDateString();
+</script>
+
+
+<div style="position:relative;right:120px;top:20px; width:280px;height:120px;background-color:#F0F0F0">
+<img style="height:100px;float:left;margin-right:20px;position:relative;top:12px;left:10px;" src="images/medical-appointment.png" alt="Appointment">
+<h3 style="display:inline-block;position:relative;left:20px;line-height:35px;"><span style="color:darkturquoise;font-size: x-large;">25</span><br>Appointments</h3>
+
+<div style="position:relative;left:300px;bottom:105px; width:280px;height:120px;background-color:#F0F0F0">
+<img style="height:100px;float:left;margin-right:20px;position:relative;top:12px;left:10px;" src="images/siren.png" alt="Urgent Cases">
+<h3 style="display:inline-block;position:relative;left:20px;line-height:35px;"><span id="output" style="color:red;font-size: x-large;">2</span><br>Urgent Cases</h3>
+
+<div style="position:relative;left:300px;bottom:104px; width:290px;height:120px;background-color:#F0F0F0">
+<img style="height:100px;float:left;position:relative;top:12px;left:10px;" src="images/doctor.png" alt="Doctors">
+<h3 style="display:inline-block;position:relative;left:20px;line-height:35px;"><span style="color:darkturquoise;font-size: x-large;">02</span><br>Doctors Available</h3>
+
+<div style="position:relative;left:310px;bottom:104px; width:290px;height:120px;background-color:#F0F0F0">
+<img style="height:100px;float:left;position:relative;top:12px;left:10px;" src="images/nurse.png" alt="Doctors">
+<h3 style="display:inline-block;position:relative;left:20px;line-height:35px;"><span style="color:darkturquoise;font-size: x-large;">06</span><br>Nurses Available</h3>
+</div>
+<div style="position:absolute;">
+  <table id="Table" width=1500 style="position:relative;right:600px;bottom:50px;">
+    <head style="text-align:centre;">
+    <th style="position:relative;right:50px;">Patient</th>
+    <th style="position:relative;right:20px;">Patient Id</th>
+    <th style="position:relative;right:10px;">Ward</th>
+    <th style="position:relative;right:15px;">Bed No.</th>
+    <th style="position:relative;right:40px;">Current SpO2/%</th>
+    <th style="position:relative;right:50px;">Current Heart Rate/BPM</th>
+    <th style="position:relative;right:60px;">Current Blood Pressure/mmHg</th>
+    <th style="position:relative;right:40px;">Status</th>
+    </head>
+    <body>
+    <tr class="options urgent" >
+        <td><a href="vitals.html" style="text-decoration: none;color:black;">Edward Mathews</a></td>
+         <td contenteditable="True">#10023456</td>
+         <td contenteditable="True">02</td>
+         <td contenteditable="True">07</td>
+    <div>
+      <td class="hovertext" data-hover=SpO2_Time,Baseline contenteditable="True">
+        96
+      </td>
+    </div>
+    <div>
+      <td class="hovertext" data-hover=Heart_Rate_Time,Baseline  contenteditable="True">
+        87
+      </td>
+    </div>
+    <div>
+      <td class="hovertext" data-hover=BP_Time,Baseline contenteditable="True">
+        150/90
+        </td>
+    </div>
+        <td >
+            <select class="select dd"  >
+                <option value="1">Stable</option>
+                <option value="2" selected="selected">Urgent</option>
+            </select>
+        </td>
+    </tr>
+    <tr class="options">
+       <td>Ng Wei Da</td> 
+       <td contenteditable="True">#10023435</td>
+       <td contenteditable="True">02</td>
+       <td contenteditable="True">09</td> 
+       <td contenteditable="True">97</td>
+       <td contenteditable="True">90</td>
+       <td contenteditable="True">113/78</td>
+        <td>
+            <select class="select dd" >
+              <option value="1">Stable</option>
+              <option value="2">Urgent</option>
+            </select>
+        </td>
+    </tr>
+    <tr class="options">
+        <td >Lee Jit Tong</td> 
+        <td contenteditable="True">#10023463</td>
+        <td contenteditable="True">02</td>
+        <td contenteditable="True">03</td> 
+        <td contenteditable="True">98</td>
+        <td contenteditable="True">86</td>
+        <td contenteditable="True">110/65</td>
+        <td >
+            <select class="select dd">
+              <option value="1">Stable</option>
+              <option value="2">Urgent</option>
+            </select>
+        </td>
+    </tr>
+    <tr class="options urgent">
+       <td  >Tan Ming Hua</td> 
+       <td contenteditable="True">#10023478</td>
+       <td contenteditable="True">02</td>
+       <td contenteditable="True">04</td> 
+       <td contenteditable="True">91</td>
+       <td contenteditable="True">97</td>
+       <td contenteditable="True">110/50</td>
+        <td>
+            <select class="select dd">
+              <option value="1">Stable</option>
+              <option value="2" selected="selected">Urgent</option>
+            </select>
+        </td>
+    </tr>
+         <tr class="options">
+         <td>Muhammad Ishak</td> 
+         <td contenteditable="True">#10023492</td>
+         <td contenteditable="True">02</td>
+         <td contenteditable="True">06</td>  
+         <td contenteditable="True">98</td>
+         <td contenteditable="True">92</td>
+         <td contenteditable="True">109/75</td>
+        <td >
+            <select class="select dd">
+              <option value="1">Stable</option>
+              <option value="2">Urgent</option>
+            </select>
+        </td>
+    </tr>
+         <tr class="options">
+         <td >Raj Anand</td> 
+         <td contenteditable="True">#10023422</td>
+         <td contenteditable="True">02</td>
+         <td contenteditable="True">08</td> 
+         <td contenteditable="True">96</td>
+         <td contenteditable="True">100</td>
+         <td contenteditable="True">102/68</td>
+        <td >
+            <select class="select dd">
+              <option value="1">Stable</option>
+              <option value="2">Urgent</option>
+            </select>
+        </td>
+    </tr>
+    </body>
+</table>
+</div>
+<script
+  src="https://code.jquery.com/jquery-3.6.0.js"
+  integrity="sha256-H+K7U5CnXl1h5ywQfKtSj8PCmoN9aaq30gDh27Xc0jk="
+  crossorigin="anonymous"></script>
+<script src="index.js"></script>
+</body>
+</html>

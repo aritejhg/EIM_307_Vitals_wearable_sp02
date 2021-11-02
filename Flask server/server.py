@@ -20,7 +20,7 @@ socketio = SocketIO(app)
 #active patients dict, contains a list of active patients and sensors attached to them.
 #always loaded
 #format is {sensorid:patientid}
-sensors_patients_dict = {} #enter demo data based on names on website
+sensors_patients_dict = {"123":"1", "456":"1"} #enter demo data based on names on website
 
 #each patient has a file, which contains details in registeration + status (active/not). also has historical data of sensors. loaded when clicked on patient
 #create files for demo
@@ -50,16 +50,17 @@ def subscribe_to_topic(topics):
 def handle_alert(client, userdata, message):
     topic=str(message.topic)
     payload=message.payload.decode()
-    sensor = topic.lstrip("alert/")
+    sensor = topic.lstrip("wearatals/alert/")[0:3]
     patient = patient_dict[sensor] #refer to dict, get patient id
-    patient.status = payload #still needs to change to incorporate pandas dataframe
+    timestamp = payload[0:12]
+    reading = payload[14: len(payload)-1]
     socketio.emit('alert', {'patientid' : patient, 'status': payload} )
 
 @mqtt.on_topic('data/#')
 def handle_mqtt_message(client, userdata, message):
     topic=str(message.topic)
     payload=message.payload.decode() #payload will be in the form of [time,data]
-    sensor = topic.lstrip("data/")
+    sensor = topic.lstrip("wearatals/data/")
     patient = patient_dict[sensor] #refer to dict, get patient id
     add_data_to_dataframe(payload,sensor,patient)
     socektio.emit('patient_data', {'patientid' : patient, 'sensor' : sensor , 'data' : data})

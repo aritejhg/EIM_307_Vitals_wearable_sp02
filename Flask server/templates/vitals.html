@@ -1,33 +1,46 @@
 <!DOCTYPE html>
-
 <html lang="en" dir="ltr">
   <head>
     <meta charset="utf-8">
     <title>Wearatals</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="styles.css">
+    <link rel="icon" href="images/favicon.ico">
     <link href="https://use.fontawesome.com/releases/v5.0.6/css/all.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=PT+Serif&display=swap" rel="stylesheet">
-    </head>
+    <script src="https://code.jquery.com/jquery-3.6.0.js"
+  integrity="sha256-H+K7U5CnXl1h5ywQfKtSj8PCmoN9aaq30gDh27Xc0jk="
+  crossorigin="anonymous"></script>
+  <script>
+  window.onload = setupRefresh;
+    function setupRefresh()
+    {
+        setInterval("refreshBlock();",30000);
+    }
+    
+    function refreshBlock()
+    {
+       $('#block1').load('path/to/databasepage.php');
+    }
+</script>
+</head>
   <body>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.0.1/socket.io.js"></script>
     <div class="navbar">
         <a class="active"href="#">Vitals</a> 
         <a href="#"> Prescription</a> 
         <a href="#"> Diagnosis</a> 
         <a href="#">Notes</a>
         <a href="#">Personal Details</a>
+        <a href="Baseline.html">Baseline Values</a>
     </div>
     <div class="sidebar">
         <div style="color:white; background-color:turquoise;height:70px;font-family:Verdana, Geneva, Tahoma, sans-serif ;font-weight:bolder;font-size:xx-large;">H</div>
+        <a href="index.html" style="position:relative;right:10px;"><i class="fa fa-home" aria-hidden="true"></i></a>
+    
+    <a href="User Registration.html"style="position:relative;right:10px;"><i class="fas fa-user-plus"></i></a>
+    <a href="User Registration.html"style="position:relative;right:10px;"><i class="fas fa-search"></i></a>
+    <a href="login.html"style="position:relative;right:10px;"><i class="fas fa-sign-out-alt"></i></a>
         
-        <a href="patients.html" style="position:relative;right:10px;"><i class="fa fa-home" aria-hidden="true"></i></a>
-        <i class="fa fa-fw fa-calendar-check"></i>
-        
-        <a href="user_registeration.html" style="position:relative;right:10px;"><i class="fas fa-user-plus"></i></a>
-        <i class="fas fa-search"></i>
-        <br>
-        <a href="login.html"style="position:relative;right:10px;"><i class="fas fa-sign-out-alt"></i></a>
     </div>
     
     <div class="main">
@@ -101,5 +114,6 @@
     <img style="height:100px;float:left;margin-right:20px;position:relative;top:12px;left:10px;" src="images/blood-pressure.png" alt="Blood Pressure">
     <h3 style="display:inline-block;position:relative;left:5px;line-height:35px;bottom:10px;">Blood Pressure:</h3>
 </div>
-
+<h1 style="position:relative;left:300px;bottom:730px;color:turquoise; font-family: 'PT Serif', serif;">Graphs</h1>
+<div id="block1"></div>
 </body>

@@ -6,7 +6,7 @@
 //display
 #include <SPI.h>
 #include <Adafruit_GFX.h>
-#include <Adafruit_SSD1306.h>
+#include <Adafruit_SH110X.h>
 #include <time.h>
 
 //wifi details
@@ -24,6 +24,15 @@ const char* ntpServer = "pool.ntp.org";
 const long  gmtOffset_sec = 0;
 const int   daylightOffset_sec = 3600;
 
+//change limit
+//void change_limit(byte* payload) {
+
+//}
+//change alert mode
+//void change_alert_mode() {
+  
+//}
+
 //MQTT callback (used below)
 void callback(char* topic, byte* payload, unsigned int length) {
   Serial.print("Callback - ");
@@ -31,6 +40,13 @@ void callback(char* topic, byte* payload, unsigned int length) {
   for (int i = 0; i < length; i++) {
     Serial.print((char)payload[i]);
   }
+  char limit_topic[22];
+  //if (String(topic) == "wearatals/123/limit") {
+    //change_limit(payload);
+  //}
+  //if (String(topic) == "wearatals/123/alert") {
+    //change_alert_mode();
+  //}
 }
 
 // MQTT client
@@ -45,17 +61,17 @@ void setupMQTT() {
 }
 
 //Display setup
-Adafruit_SSD1306 display = Adafruit_SSD1306(128, 32, &Wire);
-#define BUTTON_A 1
-#define BUTTON_B 21
+Adafruit_SH1107 display = Adafruit_SH1107(64,128, &Wire);
+#define BUTTON_A 15
+#define BUTTON_B 32
 #define BUTTON_C 14
 
 
 uint32_t last_time = 0;
 
 // Reset pin, MFIO pin
-int resPin = 32;
-int mfioPin = 33;
+int resPin = 12;
+int mfioPin = 13;
 
 SparkFun_Bio_Sensor_Hub bioHub(resPin, mfioPin); 
 bioData body;  
@@ -64,6 +80,20 @@ void setup() {
   
   Serial.begin(9600);
   Wire.begin();
+
+    //Wifi setup
+  Serial.println("Connecting to ");
+  Serial.println(ssid);
+  WiFi.begin(ssid, PWD);
+
+  //check wi-fi is connected to wi-fi network
+  while (WiFi.status() != WL_CONNECTED) {
+    delay(1000);
+    Serial.print(".");
+  }
+  Serial.println("");
+  Serial.println("WiFi connected..!");
+  Serial.print("Got IP: ");  Serial.println(WiFi.localIP());
   
   //Sensor setup
   int result = bioHub.begin();
@@ -87,7 +117,8 @@ void setup() {
 
   Serial.println("OLED FeatherWing test");
   // SSD1306_SWITCHCAPVCC = generate display voltage from 3.3V internally
-  display.begin(SSD1306_SWITCHCAPVCC, 0x3C); // Address 0x3C for 128x32
+  //display.begin(SSD1306_SWITCHCAPVCC, 0x3C); // Address 0x3C for 128x32
+  display.begin(0x3C, true); // Address 0x3C for 128x64
 
   Serial.println("OLED begun");
 
@@ -109,7 +140,7 @@ void setup() {
 
   // text display tests
   display.setTextSize(1);
-  display.setTextColor(SSD1306_WHITE);
+  display.setTextColor(SH110X_WHITE);
   display.setCursor(0,0);
   display.print("Connecting to SSID\n'adafruit':");
   display.println("IP: 10.0.1.23");
@@ -127,20 +158,6 @@ void setup() {
   display.print("Stat");
   display.display();
   
-  //Wifi setup
-  Serial.println("Connecting to ");
-  Serial.println(ssid);
-  WiFi.begin(ssid, PWD);
-
-  //check wi-fi is connected to wi-fi network
-  while (WiFi.status() != WL_CONNECTED) {
-    delay(1000);
-    Serial.print(".");
-  }
-  Serial.println("");
-  Serial.println("WiFi connected..!");
-  Serial.print("Got IP: ");  Serial.println(WiFi.localIP());
-  
   setupMQTT();
   
   // Init and get the time
@@ -153,7 +170,7 @@ void reconnect() {
   Serial.println("Connecting to MQTT Broker...");
   while (!mqttClient.connected()) {
       Serial.println("Reconnecting to MQTT Broker..");
-      String clientId = "clientId-t1L0h0i8gz";
+      String clientId = "clientId-";
       clientId += String(random(0xffff), HEX);
       Serial.println(clientId);
       if (mqttClient.connect(clientId.c_str())) {
@@ -161,7 +178,7 @@ void reconnect() {
         
 // subscribe to topic
         char subtopic[25];
-        sprintf(subtopic, "wearatals/%s", sensorID);
+        sprintf(subtopic, "wearatals/%s/#", sensorID);
         mqttClient.subscribe(subtopic);
       }
       
@@ -170,7 +187,7 @@ void reconnect() {
 
 void displayData(int BPM, int SpO2, int Confidence, int Status)
 {
-  display.setTextColor(WHITE, BLACK);
+  display.setTextColor(SH110X_WHITE, SH110X_BLACK);
   display.setCursor(0,16);
   display.print(" ");
   display.print(BPM);
@@ -215,29 +232,31 @@ void sendmqtt() {
 
 
 //send alert function, input params topic as str and reading as float
-void sendalert(char *topic, int reading) {
+void sendalert(char *topic, char *reading) {
   if (!mqttClient.connected())
   {
     reconnect();
   }
   char alert_topic[35];
-  char reading_array[7];
-  sprintf(alert_topic, "wearatals/data/%s/%s", sensorID, topic);
-  itoa(reading, reading_array, 10);
+  sprintf(alert_topic, "wearatals/alert/%s/%s", sensorID, topic);
+
+// insert display print
+
   mqttClient.loop();
-  mqttClient.publish(alert_topic, reading_array);
+  mqttClient.publish(alert_topic, reading);
 }
 
 //void loop
 int last_reading = 0;
 int last_sendmqtt = 0;
-
+int reading_time = 1000;
+int sendmqtt_time = 15000;
+bool alert_mode = false;
 
 void loop() {
   int now = millis();
 //listen for change in alert levels
-
-  if (now - last_reading >= 1000) {
+  if (now - last_reading >= reading_time) {
     body= bioHub.readBpm();
     int BPM = body.heartRate;
     int SpO2= body.oxygen;
@@ -247,17 +266,6 @@ void loop() {
     
     //filter values
     if (Confidence >= 90 && BPM != 0 && SpO2 != 0 && Status == 3){
-      //BPM and SpO2 alert
-      if (BPMlowerlimit>=BPM || BPM>=BPMupperlimit) {
-        sendalert("/Heartrate",BPM);
-      }
-
-      if (SpO2 <= spo2lowerlimit) {
-          sendalert("/SpO2", SpO2);
-      }
-      
-
-      displayData(BPM, SpO2, Confidence, Status);
       
       //get timestamp
       struct tm timeinfo;
@@ -276,6 +284,18 @@ void loop() {
       sprintf(SpO2str, "%s,%i,", timestamp, SpO2);
       strcat(mqttSpO2, SpO2str);
       
+      
+      //BPM and SpO2 alert
+      if (BPMlowerlimit>=BPM || BPM>=BPMupperlimit) {
+        sendalert("/Heartrate",BPMstr);
+      }
+
+      if (SpO2 <= spo2lowerlimit) {
+          sendalert("/SpO2", SpO2str);
+      }
+      
+
+      displayData(BPM, SpO2, Confidence, Status);
       
       //serial print
       Serial.print("Heartrate: ");
