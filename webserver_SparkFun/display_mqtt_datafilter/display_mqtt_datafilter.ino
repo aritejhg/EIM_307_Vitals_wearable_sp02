@@ -8,7 +8,7 @@
 #include <Adafruit_GFX.h>
 #include <Adafruit_SH110X.h>
 #include <time.h>
-
+topic
 //wifi details
 const char *ssid = "aritejh";
 const char *PWD = "fvvs4503";
@@ -139,7 +139,7 @@ void setup() {
   //pinMode(BUTTON_C, INPUT_PULLUP);
 
   // text display tests
-  display.setTextSize(1);
+  display.setTextSize(2);
   display.setTextColor(SH110X_WHITE);
   display.setCursor(0,0);
   display.print("Connecting to SSID\n'adafruit':");
@@ -148,13 +148,11 @@ void setup() {
   display.setCursor(0,0);
   display.display(); // actually display all of the above
   display.clearDisplay(); 
-  display.setCursor(0,0);
+  display.setCursor(10,0);
   display.print(" HR ");
-  display.setCursor(30,0);
-  display.print("Conf");
-  display.setCursor(60,0);
+  display.setCursor(10,40);
   display.print(" O2 ");
-  display.setCursor(90,0);
+  display.setCursor(10,80);
   display.print("Stat");
   display.display();
   
@@ -185,23 +183,14 @@ void reconnect() {
   }
 }
 
-void displayData(int BPM, int SpO2, int Confidence, int Status)
+void displayData(int BPM, int SpO2, int Status)
 {
   display.setTextColor(SH110X_WHITE, SH110X_BLACK);
-  display.setCursor(0,16);
-  display.print(" ");
+  display.setCursor(10,20);
   display.print(BPM);
-  display.print(" ");
-  display.setCursor(30,16);
-  display.print(" ");
-  display.print(Confidence);
-  display.print(" ");
-  display.setCursor(60,16);
-  display.print(" ");
+  display.setCursor(10,60);
   display.print(SpO2);
-  display.print(" ");
-  display.setCursor(90,16);
-  display.print(" ");
+  display.setCursor(10,100);
   display.print(Status);
   display.display();
 }
@@ -231,7 +220,7 @@ void sendmqtt() {
 }  
 
 
-//send alert function, input params topic as str and reading as float
+//send alert function, input params topic as str and reading as str
 void sendalert(char *topic, char *reading) {
   if (!mqttClient.connected())
   {
@@ -263,6 +252,8 @@ void loop() {
     int Confidence = body.confidence;
     int Status = body.status; 
     last_reading = now;
+
+    displayData(BPM, SpO2, Status);
     
     //filter values
     if (Confidence >= 90 && BPM != 0 && SpO2 != 0 && Status == 3){
@@ -293,9 +284,6 @@ void loop() {
       if (SpO2 <= spo2lowerlimit) {
           sendalert("/SpO2", SpO2str);
       }
-      
-
-      displayData(BPM, SpO2, Confidence, Status);
       
       //serial print
       Serial.print("Heartrate: ");

@@ -28,12 +28,12 @@ sensors_patients_dict = {"123":"1", "456":"1"} #enter demo data based on names o
 # 1 active file + df for each patients sensor inputs? backed up to patient file every half/full day (not implementing this). always loaded.
 for patient in set(list(patients_dict.values())):
     if isinstance(patient, pd.DataFrame):
-        return
+        pass
     else:
         list_of_sensors = [sensor for patient_id,sensor in sensors_patients_dict.iteritems() if patient_id == patient]
         patient = pd.DataFrame(columns = list_of_sensors)
         #write to file
-        return patient
+        #return patient
 
 def add_data_to_dataframe(payload,sensor,patient_id):
     sensor_list = list(patient_df.columns)
@@ -56,7 +56,7 @@ def handle_alert(client, userdata, message):
     reading = payload[14: len(payload)-1]
     socketio.emit('alert', {'patientid' : patient, 'status': payload} )
 
-@mqtt.on_topic('data/#')
+@mqtt.on_topic('wearatals/data/#')
 def handle_mqtt_message(client, userdata, message):
     topic=str(message.topic)
     payload=message.payload.decode() #payload will be in the form of [time,data]
@@ -71,7 +71,10 @@ def handle_logging(client, userdata, level, buf):
 
 #next, we handle website stuff
 @app.route('/login')
+def login():
     return render_template('login.html')
+
+#@app.route('/')
 
 @app.route('/user_registeration')
 def user_registeration():
@@ -86,11 +89,11 @@ def user_registeration():
     admission_date = str(escape(request.args.get("Admission Date",)))
     allergies = str(escape(request.args.get("Allergies", )))
     condition = str(escape(request.args.get("Medical Condition", )))
-    if full_name or nric or id or ward or bed or sensor_ids or gender or phone or admission_date or allergies or condition:
+    #if full_name or nric or id or ward or bed or sensor_ids or gender or phone or admission_date or allergies or condition:
         #update patient csv
         #update sensor dict
-    return (render_template('user_registeration.html')
-    + full_name + nric + id + ward + bed + sensor_ids + gender + phone + admission_date + allergies + condition)
+    return (render_template('user_registeration.html'))
+    #+ full_name + nric + id + ward + bed + sensor_ids + gender + phone + admission_date + allergies + condition)
 
 
 @app.route('/patients')
