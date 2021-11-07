@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Simple realtime app</title>
+    <link
+      rel="stylesheet"
+      href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css"
+    />
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+  </head>
+  <body>
+    <h1>HI</h1>
+    <!-- Table stuff -->
+    <table id="myTable" width="1500" style="margin-left: 200px">
+      <tr>
+        <th>Patient</th>
+        <th>Patient Id</th>
+        <th>Ward</th>
+        <th>Bed No.</th>
+        <th>Current SpO2/%</th>
+        <th>Current Heart Rate/BPM</th>
+        <th>Current Blood Pressure/mmHg</th>
+        <th>Status</th>
+      </tr>
+    </table>
+
+    <!-- Socket io -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.3.1/socket.io.js"></script>
+    <script src="js/dashboard.js"></script>
+  </body>
+</html>

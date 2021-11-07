@@ -8,16 +8,16 @@
 #include <Adafruit_GFX.h>
 #include <Adafruit_SH110X.h>
 #include <time.h>
-topic
+
 //wifi details
 const char *ssid = "aritejh";
 const char *PWD = "fvvs4503";
 
 //patient data
 char sensorID[] = "123";
-int spo2lowerlimit = 95;
-int BPMlowerlimit = 80;
-int BPMupperlimit = 135;
+int SPlowerlimit = 95;
+int HRlowerlimit = 80;
+int HRupperlimit = 135;
 
 //time stuff
 const char* ntpServer = "pool.ntp.org";
@@ -25,28 +25,37 @@ const long  gmtOffset_sec = 0;
 const int   daylightOffset_sec = 3600;
 
 //change limit
-//void change_limit(byte* payload) {
-
-//}
-//change alert mode
-//void change_alert_mode() {
-  
-//}
+void change_limit(char* message) {
+  String limit;
+  int value;
+  sscanf(message, "%s,%d", limit, &value);
+  if (limit == "SPlowerlimit"){
+    SPlowerlimit = value;
+  }
+  else if (limit == "HRlowerlimit"){
+    HRlowerlimit = value;
+  }
+  else if (limit == "HRupperlimit"){
+    HRupperlimit = value;
+  }
+}
 
 //MQTT callback (used below)
-void callback(char* topic, byte* payload, unsigned int length) {
+void callback(char* topic, byte* message, unsigned int length) {
   Serial.print("Callback - ");
+  Serial.print("Message arrived on topic: ");
+  Serial.print(topic);
   Serial.print("Message:");
+  char* messageTemp;
+  
   for (int i = 0; i < length; i++) {
-    Serial.print((char)payload[i]);
+    Serial.print((char)message[i]);
+    messageTemp += (char)message[i];
   }
-  char limit_topic[22];
-  //if (String(topic) == "wearatals/123/limit") {
-    //change_limit(payload);
-  //}
-  //if (String(topic) == "wearatals/123/alert") {
-    //change_alert_mode();
-  //}
+  Serial.println(messageTemp);
+  if (String(topic) == "wearatals/123/limit") {
+    change_limit(messageTemp);  
+  }
 }
 
 // MQTT client
@@ -244,7 +253,6 @@ bool alert_mode = false;
 
 void loop() {
   int now = millis();
-//listen for change in alert levels
   if (now - last_reading >= reading_time) {
     body= bioHub.readBpm();
     int BPM = body.heartRate;
@@ -277,11 +285,11 @@ void loop() {
       
       
       //BPM and SpO2 alert
-      if (BPMlowerlimit>=BPM || BPM>=BPMupperlimit) {
+      if (HRlowerlimit>=BPM || BPM>=HRupperlimit) {
         sendalert("/Heartrate",BPMstr);
       }
 
-      if (SpO2 <= spo2lowerlimit) {
+      if (SpO2 <= SPlowerlimit) {
           sendalert("/SpO2", SpO2str);
       }
       

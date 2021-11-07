@@ -19,7 +19,7 @@ const patientData = [
 
 const mqttUrl = "";
 const mqttClient = mqtt.connect(mqttUrl, {
-  clientId: "abcdef",
+  clientId: "wearatals_node_server",
   clean: true,
   connectTimeout: 4000,
   username: "",

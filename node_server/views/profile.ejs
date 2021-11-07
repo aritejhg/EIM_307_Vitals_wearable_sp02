@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Profile page</title>
+    <link
+      rel="stylesheet"
+      href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css"
+    />
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+  </head>
+  <body>
+    <h1
+      style="
+        display: inline-block;
+        color: turquoise;
+        position: relative;
+        left: 300px;
+        bottom: 480px;
+        font-family: 'PT Serif', serif;
+      "
+    >
+      Current Readings
+    </h1>
+    <div
+      style="
+        position: relative;
+        left: 300px;
+        bottom: 490px;
+        width: 280px;
+        height: 120px;
+        background-color: #f0f0f0;
+      "
+    >
+      <h3
+        style="
+          display: inline-block;
+          position: relative;
+          left: 20px;
+          line-height: 35px;
+          top: 20px;
+        "
+      >
+        Heart Rate:
+      </h3>
+      <h4 id="hr_reading"></h4>
+    </div>
+    <div
+      style="
+        position: relative;
+        left: 600px;
+        bottom: 610px;
+        width: 280px;
+        height: 120px;
+        background-color: #f0f0f0;
+      "
+    >
+      <h3
+        style="
+          display: inline-block;
+          position: relative;
+          left: 20px;
+          line-height: 35px;
+          bottom: 10px;
+        "
+      >
+        Sp02:
+      </h3>
+      <h4 id="sp_reading"></h4>
+    </div>
+    <div
+      style="
+        position: relative;
+        left: 900px;
+        bottom: 730px;
+        width: 280px;
+        height: 120px;
+        background-color: #f0f0f0;
+      "
+    >
+      <h3
+        style="
+          display: inline-block;
+          position: relative;
+          left: 5px;
+          line-height: 35px;
+          bottom: 10px;
+        "
+      >
+        Blood Pressure:
+      </h3>
+      <h4 id="bp_reading"></h4>
+    </div>
+    <h1
+      style="
+        position: relative;
+        left: 300px;
+        bottom: 730px;
+        color: turquoise;
+        font-family: 'PT Serif', serif;
+      "
+    >
+      Graphs
+    </h1>
+    <div id="graphs">
+      <div id="HR graph"></div>
+      <div id="SP graph"></div>
+      <div id="BP graph"></div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.3.1/socket.io.js"></script>
+    <script>
+      const patientId = "<%-ind%>";
+      let readingsObj = {};
+
+      let socket = io.connect();
+
+      socket.emit("fetch_profile", patientId, (data, readings) => {
+        $("#hr_reading").html(data[4]);
+        $("#sp_reading").html(data[5]);
+        $("#bp_reading").html(data[6]);
+
+        readingsObj = readings;
+      });
+
+      socket.on("update_data", (pInd, newData) => {
+        if (pInd !== patientId) {
+          return;
+        }
+        $("#hr_reading").html(newData[4]);
+        $("#sp_reading").html(newData[5]);
+        $("#bp_reading").html(newData[6]);
+
+        // draw graphs
+        drawGraph(newData.HR, "HR graph");
+        drawGraph(newData.SP, "SP graph");
+        drawGraph(newData.BP, "BP graph");
+      });
+
+      function drawGraph(dataArray, divId) {}
+    </script>
+  </body>
+</html>

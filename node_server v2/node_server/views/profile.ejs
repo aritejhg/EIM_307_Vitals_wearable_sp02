@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Profile page</title>
+    <link
+      rel="stylesheet"
+      href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css"
+    />
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src='https://cdnjs.cloudflare.com/ajax/libs/Chart.js/1.0.2/Chart.min.js'></script>
+  </head>
+  <body>
+    <h1
+      style="
+        display: inline-block;
+        color: turquoise;
+        font-family: 'PT Serif', serif;
+      "
+    >
+      Current Readings
+    </h1>
+    <div
+      style="
+        background-color: #f0f0f0;
+      "
+    >
+      <h3
+        style="
+          display: inline-block;
+        "
+      >
+        Heart Rate:
+      </h3>
+      <h4 id="hr_reading"></h4>
+    </div>
+    <div
+      style="
+        background-color: #f0f0f0;
+      "
+    >
+      <h3
+        style="
+          display: inline-block;
+        "
+      >
+        Sp02:
+      </h3>
+      <h4 id="sp_reading"></h4>
+    </div>
+    <div
+      style="
+        background-color: #f0f0f0;
+      "
+    >
+      <h3
+        style="
+        "
+      >
+        Blood Pressure:
+      </h3>
+      <h4 id="bp_reading"></h4>
+    </div>
+    <h1
+      style="
+        color: turquoise;
+        font-family: 'PT Serif', serif;
+      "
+    >
+      Graphs
+    </h1>
+    <div id="graphs" style="width: 80%; margin: 15px auto;">
+      <canvas id="HR graph"></canvas>
+      <canvas id="SP graph"></canvas>
+      <canvas id="BP graph"></canvas>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.3.1/socket.io.js"></script>
+    <script>
+      const patientId = "<%-ind%>";
+      let socket = io.connect();
+
+      socket.emit("fetch_profile", patientId, (patientData, readings) => {
+        $("#hr_reading").html(patientData[4][1]);
+        $("#sp_reading").html(patientData[5][1]);
+        $("#bp_reading").html(patientData[6][1]);
+        drawGraphHR(readings.HR, 90, 120, )
+      });
+
+      socket.on("update_profile", (pInd, newData) => {
+        if (pInd !== patientId) {
+          return;
+        }
+        $("#hr_reading").html(newData[4]);
+        $("#sp_reading").html(newData[5]);
+        $("#bp_reading").html(newData[6]);
+
+      });
+
+      function drawGraphHR(dataArray, base1, base2) {
+        var ctx = document.getElementById("HR graph").getContext('2d');
+        const dataLabels = []
+        const dataData = []
+        const baseline1 = []
+        const baseline2 = []
+        const timeNow = Date.now();
+        for (var i = 0; i < dataArray.length; i++) {
+          dataLabels.push(-1 * Math.floor((timeNow - dataArray[i][0]) / 60000))
+          dataData.push(dataArray[i][1])
+          baseline1.push(base1)
+          baseline2.push(base2)
+        }
+        const lineData = {
+            labels : dataLabels,
+            datasets : [
+              {
+                strokeColor: "#FF0000",
+                fill: false,
+                pointColor: "#fff",
+                pointStrokeColor: "#9DB86D",
+                fillColor: "rgba(0,0,0,0)",
+                data: baseline1
+              },{
+                strokeColor: "#00FF00",
+                fill: false,
+                pointColor: "#fff",
+                pointStrokeColor: "#9DB86D",
+                fillColor: "rgba(0,0,0,0)",
+                data: baseline2
+              },{
+                strokeColor: "#ACC26D",
+                fill: false,
+                pointColor: "#fff",
+                pointStrokeColor: "#9DB86D",
+                fillColor: "rgba(0,0,0,0)",
+                data: dataData
+              }
+            ]
+        }
+        var myChart = new Chart(ctx).Line(lineData)
+      }
+
+      function drawGraphSP(dataArray, b) {
+        var ctx = document.getElementById("HR graph").getContext('2d');
+        const dataLabels = []
+        const dataData = []
+        const timeNow = Date.now();
+        for (var i = 0; i < dataArray.length; i++) {
+          dataLabels.push((timeNow - dataArray[i][0]) / 60000)
+          dataData.push(dataArray[i][1])
+        }
+        const lineData = {
+            labels : dataLabels,
+            datasets : [
+              {
+                strokeColor: "#ACC26D",
+                pointColor: "#fff",
+                pointStrokeColor: "#9DB86D",
+                data: dataData
+              }]
+        }
+        var myChart = new Chart(ctx).Line(lineData);
+      }
+
+      function drawGraphBP(dataArray, a) {
+        var ctx = document.getElementById("HR graph").getContext('2d');
+        const dataLabels = []
+        const dataData = []
+        const timeNow = Date.now();
+        for (var i = 0; i < dataArray.length; i++) {
+          dataLabels.push((timeNow - dataArray[i][0]) / 60000)
+          dataData.push(dataArray[i][1])
+        }
+        const lineData = {
+            labels : dataLabels,
+            datasets : [
+              {
+                strokeColor: "#ACC26D",
+                pointColor: "#fff",
+                pointStrokeColor: "#9DB86D",
+                data: dataData
+              }]
+        }
+        var myChart = new Chart(ctx).Line(lineData);
+      }
+    </script>
+  </body>
+</html>
