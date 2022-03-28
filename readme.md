@@ -1,3 +1,5 @@
+# not currently maintained
+
 This repo will combine Arduino code for SparkFun PPG sensor with featherOLED to be used on the Huzzah32. Dev code is contained in huzzah32_featherOLED_SFsensor.
 webserver_sparkfun contains code for the server.
 
